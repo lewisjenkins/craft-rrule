@@ -1,21 +1,35 @@
 # Craft RRule Wrapper
 
-A Craft CMS 5 module providing Twig access to the full [php-rrule](https://github.com/rlanvin/php-rrule) library.  
-This allows you to create and work with recurrence rules (RRULE) and recurrence sets (RSET) directly in Twig templates.
+A Craft CMS module that exposes the [php-rrule](https://github.com/rlanvin/php-rrule) library directly to Twig templates.  
+It provides access to all core `RRule` and `RSet` methods so you can generate and work with recurrence rules without writing PHP plugins yourself.
 
-The full API is available in PHP via the original library — this module simply exposes it to Twig without modifying behaviour.
+For the complete API, see the [php-rrule wiki](https://github.com/rlanvin/php-rrule/wiki).
 
 ---
 
-## RRULE
+## Installation
 
-### Twig Example
+```bash
+composer require lewisjenkins/craft-rrule
+```
+
+Once installed, the module is available in Twig as:
 
 ```twig
+craft.rrule.rrule()   {# Create an RRule instance #}
+craft.rrule.rset()    {# Create an RSet instance #}
+```
+
+---
+
+## RRULE Examples
+
+### 1. Create from array (Twig)
+```twig
 {% set rr = craft.rrule.rrule({
-  freq: 'daily',
-  count: 3,
-  dtstart: date_create('2025-08-09 09:00', timezone('America/New_York'))
+    freq: 'daily',
+    count: 3,
+    dtstart: '2025-08-09 09:00 America/New_York'
 }) %}
 
 {% for d in rr.getOccurrences() %}
@@ -23,18 +37,31 @@ The full API is available in PHP via the original library — this module simply
     {{ d|date('Y-m-d H:i', tz) }}<br>
 {% endfor %}
 ```
-
-**Expected output**:
+**Expected output:**
 ```
 2025-08-09 09:00
 2025-08-10 09:00
 2025-08-11 09:00
 ```
 
+**PHP equivalent:**
+```php
+use RRule\RRule;
+
+$rr = new RRule([
+    'FREQ' => 'DAILY',
+    'COUNT' => 3,
+    'DTSTART' => new DateTime('2025-08-09 09:00', new DateTimeZone('America/New_York')),
+]);
+
+foreach ($rr as $d) {
+    echo $d->format('Y-m-d H:i T') . "\n";
+}
+```
+
 ---
 
-### Twig Example (from string)
-
+### 2. Create from RFC-style string (Twig)
 ```twig
 {% set rr = craft.rrule.rrule('
 DTSTART;TZID=America/New_York:20250809T090000
@@ -46,85 +73,91 @@ RRULE:FREQ=DAILY;COUNT=3
     {{ d|date('Y-m-d H:i', tz) }}<br>
 {% endfor %}
 ```
-
-**Expected output**:
+**Expected output:**
 ```
 2025-08-09 09:00
 2025-08-10 09:00
 2025-08-11 09:00
 ```
 
----
-
-### PHP Example
-
+**PHP equivalent:**
 ```php
 use RRule\RRule;
 
-$rr = new RRule([
-    'FREQ' => 'DAILY',
-    'COUNT' => 3,
-    'DTSTART' => new DateTime('2025-08-09 09:00', new DateTimeZone('America/New_York'))
-]);
+$rr = new RRule("DTSTART;TZID=America/New_York:20250809T090000\nRRULE:FREQ=DAILY;COUNT=3");
 
 foreach ($rr as $d) {
-    echo $d->format('Y-m-d H:i T') . PHP_EOL;
+    echo $d->format('Y-m-d H:i T') . "\n";
 }
 ```
 
 ---
 
-## RSET
+## RSET Examples
 
-### Twig Example
-
+### 1. Multiple rules in a set (Twig)
 ```twig
 {% set rset = craft.rrule.rset() %}
+
 {% do rset.addRRule({
-  freq: 'daily',
-  count: 2,
-  dtstart: date_create('2025-08-09 09:00', timezone('America/New_York'))
+    freq: 'yearly',
+    count: 2,
+    byday: 'TU',
+    dtstart: '1997-09-02 09:00 America/New_York'
 }) %}
-{% do rset.addDate(date_create('2025-08-15 09:00', timezone('America/New_York'))) %}
+
+{% do rset.addRRule({
+    freq: 'yearly',
+    count: 1,
+    byday: 'TH',
+    dtstart: '1997-09-02 09:00 America/New_York'
+}) %}
 
 {% for d in rset.getOccurrences() %}
     {% set tz = d.timezone %}
     {{ d|date('Y-m-d H:i', tz) }}<br>
 {% endfor %}
 ```
-
-**Expected output**:
+**Expected output:**
 ```
-2025-08-09 09:00
-2025-08-10 09:00
-2025-08-15 09:00
+1997-09-02 09:00
+1997-09-04 09:00
+1997-09-09 09:00
 ```
 
----
-
-### PHP Example
-
+**PHP equivalent:**
 ```php
 use RRule\RSet;
 
 $rset = new RSet();
+
 $rset->addRRule([
-    'FREQ' => 'DAILY',
+    'FREQ' => 'YEARLY',
     'COUNT' => 2,
-    'DTSTART' => new DateTime('2025-08-09 09:00', new DateTimeZone('America/New_York'))
+    'BYDAY' => 'TU',
+    'DTSTART' => new DateTime('1997-09-02 09:00', new DateTimeZone('America/New_York')),
 ]);
-$rset->addDate(new DateTime('2025-08-15 09:00', new DateTimeZone('America/New_York')));
+
+$rset->addRRule([
+    'FREQ' => 'YEARLY',
+    'COUNT' => 1,
+    'BYDAY' => 'TH',
+    'DTSTART' => new DateTime('1997-09-02 09:00', new DateTimeZone('America/New_York')),
+]);
 
 foreach ($rset as $d) {
-    echo $d->format('Y-m-d H:i T') . PHP_EOL;
+    echo $d->format('Y-m-d H:i T') . "\n";
 }
 ```
 
 ---
 
-## Full API
+## Notes
+- All Twig examples set `tz = d.timezone` so the correct timezone is used in formatting.  
+- You can pass either:
+  - An **array** with keys matching the RRule spec (`freq`, `count`, `dtstart`, etc.)  
+  - An **RFC-style string** with `DTSTART` and `RRULE` on separate lines.  
+- Infinite rules (e.g., no `COUNT` or `UNTIL`) may produce **very large datasets**. Always use methods like `getOccurrencesBetween()` or `count()` to avoid excessive loops.
 
-For the complete list of available methods and options, see the original library documentation:
-
-- [RRule documentation](https://github.com/rlanvin/php-rrule/wiki/RRule)
-- [RSet documentation](https://github.com/rlanvin/php-rrule/wiki/RSet)
+For the complete method list and advanced usage, see the  
+[php-rrule RRule docs](https://github.com/rlanvin/php-rrule/wiki/RRule) and [php-rrule RSet docs](https://github.com/rlanvin/php-rrule/wiki/RSet).
