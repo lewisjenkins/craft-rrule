@@ -55,7 +55,7 @@ $rr = new RRule([
 ]);
 
 foreach ($rr as $d) {
-    echo $d->format('Y-m-d H:i T') . "\n";
+    echo $d->format('Y-m-d H:i') . "\n";
 }
 ```
 
@@ -87,7 +87,7 @@ use RRule\RRule;
 $rr = new RRule("DTSTART;TZID=America/New_York:20250809T090000\nRRULE:FREQ=DAILY;COUNT=3");
 
 foreach ($rr as $d) {
-    echo $d->format('Y-m-d H:i T') . "\n";
+    echo $d->format('Y-m-d H:i') . "\n";
 }
 ```
 
@@ -146,7 +146,7 @@ $rset->addRRule([
 ]);
 
 foreach ($rset as $d) {
-    echo $d->format('Y-m-d H:i T') . "\n";
+    echo $d->format('Y-m-d H:i') . "\n";
 }
 ```
 
