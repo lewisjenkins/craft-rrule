@@ -1,0 +1,19 @@
+{
+  "name": "lewisjenkins/craft-rrule",
+  "description": "RRULE helpers for Craft CMS (wraps rlanvin/php-rrule).",
+  "type": "yii2-extension",
+  "license": "MIT",
+  "require": {
+    "php": "^8.2",
+    "craftcms/cms": "^5.0",
+    "rlanvin/php-rrule": "^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "lewisjenkins\\rrulewrapper\\": "src/"
+    }
+  },
+  "extra": {
+    "bootstrap": "lewisjenkins\\rrulewrapper\\RruleWrapper"
+  }
+}
