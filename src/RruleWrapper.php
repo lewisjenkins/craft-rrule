@@ -9,7 +9,7 @@ use lewisjenkins\rrulewrapper\services\RRuleApi;
 /**
  * @property-read RRuleApi $rrule
  */
-final class RruleWrapper extends BaseModule
+final class RRuleWrapper extends BaseModule
 {
     public function init(): void
     {
