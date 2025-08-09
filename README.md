@@ -21,7 +21,10 @@ Reference: **RRule wiki** → https://github.com/rlanvin/php-rrule/wiki/RRule
 
 ### 1) Create from **string** and list all occurrences
 ```twig
-{% set rr = craft.rrule.rrule('FREQ=DAILY;COUNT=3;DTSTART=20250809T090000Z') %}
+{% set rr = craft.rrule.rrule('
+DTSTART:20250809T090000Z
+RRULE:FREQ=DAILY;COUNT=3
+') %}
 {% for d in rr.getOccurrences() %}
   {{ d|date('Y-m-d H:i') }}<br>
 {% endfor %}
@@ -36,11 +39,12 @@ Reference: **RRule wiki** → https://github.com/rlanvin/php-rrule/wiki/RRule
 ```php
 use RRule\RRule;
 
-$rr = new RRule('FREQ=DAILY;COUNT=3;DTSTART=20250809T090000Z');
+$rr = new RRule("\nDTSTART:20250809T090000Z\nRRULE:FREQ=DAILY;COUNT=3\n");
 foreach ($rr->getOccurrences() as $d) {
     echo $d->format('Y-m-d H:i'), PHP_EOL;
 }
 ```
+> Note: RFC 5545 defines DTSTART and RRULE as separate properties on separate lines; the multi-line example above follows that format.
 
 ---
 
