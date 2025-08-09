@@ -3,6 +3,8 @@
   "description": "RRULE helpers for Craft CMS (wraps rlanvin/php-rrule).",
   "type": "yii2-extension",
   "license": "MIT",
+  "minimum-stability": "stable",
+  "prefer-stable": true,
   "require": {
     "php": "^8.2",
     "craftcms/cms": "^5.0",
@@ -15,5 +17,20 @@
   },
   "extra": {
     "bootstrap": "lewisjenkins\\rrulewrapper\\RRuleWrapper"
+  },
+  "keywords": [
+    "craftcms",
+    "craft",
+    "yii",
+    "rrule",
+    "recurrence",
+    "calendar",
+    "scheduling",
+    "module"
+  ],
+  "homepage": "https://github.com/lewisjenkins/craft-rrule",
+  "support": {
+    "issues": "https://github.com/lewisjenkins/craft-rrule/issues",
+    "source": "https://github.com/lewisjenkins/craft-rrule"
   }
 }
