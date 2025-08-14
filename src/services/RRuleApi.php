@@ -28,10 +28,14 @@ final class RRuleApi extends Component
     /**
      * Create a new RSet instance.
      *
+     * If $spec is provided, it should be a multi-line RFC block containing lines like
+     * DTSTART, RRULE, EXRULE, EXDATE, RDATE. When omitted, an empty RSet is created.
+     *
+     * @param string|null $spec Optional multi-line RFC block
      * @return RSet
      */
-    public function rset(): RSet
+    public function rset(?string $spec = null): RSet
     {
-        return new RSet();
+        return $spec !== null ? new RSet($spec) : new RSet();
     }
 }
