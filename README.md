@@ -32,6 +32,32 @@ RRULE:FREQ=DAILY;COUNT=3
 {% endfor %}
 ```
 
+### Expected output
+```
+2025-08-09 09:00 America/New_York
+2025-08-10 09:00 America/New_York
+2025-08-11 09:00 America/New_York
+```
+
+### RRULE — array example
+```twig
+{% set rr = craft.rrule.rrule({
+  'FREQ': 'DAILY',
+  'COUNT': 3,
+  'DTSTART': date_create('2025-08-09 09:00', timezone('America/New_York'))
+}) %}
+{% for d in rr.getOccurrences() %}
+  {{ d|date('Y-m-d H:i e', d.timezone) }}<br>
+{% endfor %}
+```
+
+### Expected output
+```
+2025-08-09 09:00 America/New_York
+2025-08-10 09:00 America/New_York
+2025-08-11 09:00 America/New_York
+```
+
 ### RSET — multi-line block example
 ```twig
 {% set rset = craft.rrule.rset('
@@ -42,6 +68,32 @@ EXDATE;TZID=America/New_York:19970902T090000
 {% for d in rset.getOccurrences() %}
   {{ d|date('Y-m-d H:i e', d.timezone) }}<br>
 {% endfor %}
+```
+
+### Expected output
+```
+1997-09-01 09:00 America/New_York
+1997-09-03 09:00 America/New_York
+```
+
+### RSET — array example
+```twig
+{% set rset = craft.rrule.rset() %}
+{% do rset.addRRule({
+  'FREQ': 'DAILY',
+  'COUNT': 3,
+  'DTSTART': date_create('1997-09-01 09:00', timezone('America/New_York'))
+}) %}
+{% do rset.addExDate(date_create('1997-09-02 09:00', timezone('America/New_York'))) %}
+{% for d in rset.getOccurrences() %}
+  {{ d|date('Y-m-d H:i e', d.timezone) }}<br>
+{% endfor %}
+```
+
+### Expected output
+```
+1997-09-01 09:00 America/New_York
+1997-09-03 09:00 America/New_York
 ```
 
 ### Timezone formatting
