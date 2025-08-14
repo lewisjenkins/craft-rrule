@@ -44,12 +44,13 @@ RRULE:FREQ=DAILY;COUNT=3
 {% set rr = craft.rrule.rrule({
   'FREQ': 'DAILY',
   'COUNT': 3,
-  'DTSTART': date_create('2025-08-09 09:00', timezone('America/New_York'))
+  'DTSTART': date('2025-08-09 09:00', 'America/New_York')
 }) %}
 {% for d in rr.getOccurrences() %}
   {{ d|date('Y-m-d H:i e', d.timezone) }}<br>
 {% endfor %}
 ```
+> Note: Twig doesn't provide `date_create()` or `timezone()`. Use Twig's `date()` function to create a DateTime in a specific timezone.
 
 ### Expected output
 ```
@@ -82,13 +83,15 @@ EXDATE;TZID=America/New_York:19970902T090000
 {% do rset.addRRule({
   'FREQ': 'DAILY',
   'COUNT': 3,
-  'DTSTART': date_create('1997-09-01 09:00', timezone('America/New_York'))
+  'DTSTART': date('1997-09-01 09:00', 'America/New_York')
 }) %}
-{% do rset.addExDate(date_create('1997-09-02 09:00', timezone('America/New_York'))) %}
+{% do rset.addExDate(date('1997-09-02 09:00', 'America/New_York')) %}
 {% for d in rset.getOccurrences() %}
   {{ d|date('Y-m-d H:i e', d.timezone) }}<br>
 {% endfor %}
 ```
+
+> Note: Twig doesn't provide `date_create()` or `timezone()`. Use Twig's `date()` function to create a DateTime in a specific timezone.
 
 ### Expected output
 ```
