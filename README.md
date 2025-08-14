@@ -23,6 +23,12 @@ Each occurrence (`DateTime`) returned by RRule/RSet retains its own timezone (fr
   {{ d|date('Y-m-d H:i e', d.timezone) }}<br>
 {% endfor %}
 ```
+**Expected output**
+```
+2025-08-09 09:00 America/New_York
+2025-08-10 09:00 America/New_York
+2025-08-11 09:00 America/New_York
+```
 
 ---
 
@@ -41,15 +47,45 @@ An RRULE (or an RSET containing one) is **infinite** if it omits both `COUNT` an
 
 **Safe alternatives**
 ```twig
-{# 1) Add COUNT #}
-{% set r1 = craft.rrule.rrule('FREQ=DAILY;COUNT=5;DTSTART=20250809T090000Z') %}
+{# 1) Add COUNT (DTSTART on its own line) #}
+{% set r1 = craft.rrule.rrule('
+DTSTART:20250809T090000Z
+RRULE:FREQ=DAILY;COUNT=5
+') %}
+```
+**Expected output**
+```
+2025-08-09 09:00
+2025-08-10 09:00
+2025-08-11 09:00
+2025-08-12 09:00
+2025-08-13 09:00
+```
 
-{# 2) Limit with a window #}
-{% set r2 = craft.rrule.rrule('FREQ=DAILY;DTSTART=20250809T090000Z') %}
+```twig
+{# 2) Limit with a window (DTSTART + RRULE separate) #}
+{% set r2 = craft.rrule.rrule('
+DTSTART:20250809T090000Z
+RRULE:FREQ=DAILY
+') %}
 {% set window = r2.getOccurrencesBetween('2025-08-09','2025-08-12') %}
+```
+**Expected output**
+```
+2025-08-09 09:00
+2025-08-10 09:00
+2025-08-11 09:00
+```
 
+```twig
 {# 3) Cap using getOccurrencesAfter with a limit #}
 {% set next3 = r2.getOccurrencesAfter('2025-08-09 09:00', true, 3) %}
+```
+**Expected output**
+```
+2025-08-09 09:00
+2025-08-10 09:00
+2025-08-11 09:00
 ```
 
 ---
@@ -61,7 +97,10 @@ Reference: **RRule wiki** → https://github.com/rlanvin/php-rrule/wiki/RRule
 
 ### 1) Create from **string** and list all occurrences
 ```twig
-{% set rr = craft.rrule.rrule('FREQ=DAILY;COUNT=3;DTSTART=20250809T090000Z') %}
+{% set rr = craft.rrule.rrule('
+DTSTART:20250809T090000Z
+RRULE:FREQ=DAILY;COUNT=3
+') %}
 {% for d in rr.getOccurrences() %}
   {{ d|date('Y-m-d H:i e', d.timezone) }}<br>
 {% endfor %}
@@ -189,7 +228,7 @@ Count: 3
 }) %}
 {{ rr.humanReadable() }}
 ```
-**Possible output**
+**Expected output**
 ```
 Every week on Monday, Friday, 4 times
 ```
@@ -206,7 +245,7 @@ Every week on Monday, Friday, 4 times
 }) %}
 {{ rr.rfcString() }}
 ```
-**Example output**
+**Expected output**
 ```
 RRULE:FREQ=MONTHLY;BYDAY=MO;BYSETPOS=1;DTSTART=20250101T090000Z
 ```
@@ -221,6 +260,10 @@ RRULE:FREQ=MONTHLY;BYDAY=MO;BYSETPOS=1;DTSTART=20250101T090000Z
   DTSTART: date('2025-08-09 09:00')
 }) %}
 {{ dump(rr.getRule()) }}
+```
+**Example output (simplified)**
+```
+{ FREQ: "DAILY", COUNT: 2, DTSTART: "2025-08-09 09:00 ..." }
 ```
 
 ---
