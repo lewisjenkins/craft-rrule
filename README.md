@@ -1,6 +1,6 @@
 # Craft RRULE Wrapper
 
-A minimal **Craft CMS 5 module** that exposes the excellent [php-rrule](https://github.com/rlanvin/php-rrule) library to **Twig**. This wrapper stays faithful to the original library and does not change its behaviour — it simply makes `RRule` and `RSet` available in templates.
+A minimal **Craft CMS 5 module** that exposes the [php-rrule](https://github.com/rlanvin/php-rrule) library to **Twig**. This wrapper stays faithful to the original library and does not change its behaviour — it simply makes `RRule` and `RSet` available in templates.
 
 ## Requirements
 - PHP 8.2+
@@ -17,9 +17,6 @@ The module exposes two helpers on `craft.rrule`:
 
 - `craft.rrule.rrule(spec)` — create an `RRule` from an **array** or **RFC-style string**
 - `craft.rrule.rset(spec?)` — create an `RSet`; optional **multi-line RFC block** string
-
-> **Important**
-> When using **strings**, `DTSTART` must be on its **own line**, separate from `RRULE` (RFC 5545).
 
 ### RRULE — simple string example
 ```twig
