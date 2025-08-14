@@ -47,7 +47,6 @@ RRULE:FREQ=DAILY;COUNT=3
   {{ d|date('Y-m-d H:i e', d.timezone) }}<br>
 {% endfor %}
 ```
-> Note: Twig doesn't provide `date_create()` or `timezone()`. Use Twig's `date()` function to create a DateTime in a specific timezone.
 
 ### Expected output
 ```
