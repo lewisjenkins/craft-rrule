@@ -91,8 +91,6 @@ EXDATE;TZID=America/New_York:19970902T090000
 {% endfor %}
 ```
 
-> Note: Twig doesn't provide `date_create()` or `timezone()`. Use Twig's `date()` function to create a DateTime in a specific timezone.
-
 ### Expected output
 ```
 1997-09-01 09:00 America/New_York
@@ -104,9 +102,6 @@ Each occurrence (`DateTime`) retains its own timezone. Always format using the o
 ```twig
 {{ d|date('Y-m-d H:i e', d.timezone) }}
 ```
-
-### Infinite rules
-Rules without **COUNT** or **UNTIL** can be infinite. Prefer `getOccurrencesBetween(start, end)` or `getOccurrencesAfter(after, inclusive, limit)` when listing occurrences from unbounded rules.
 
 ## Full API & Examples
 Refer to the original library for the complete API and many examples:
