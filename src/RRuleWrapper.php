@@ -8,22 +8,19 @@ use yii\base\Module as BaseModule;
 use lewisjenkins\rrulewrapper\services\RRuleApi;
 
 /**
- * RRuleWrapper module
+ * RRuleWrapper module.
  *
  * Provides Twig and PHP access to the php-rrule library via the RRuleApi service.
  *
  * @link https://github.com/rlanvin/php-rrule
- *
- * @property-read RRuleApi $rrule
  */
 final class RRuleWrapper extends BaseModule implements BootstrapInterface
 {
-    public const MODULE_ID = 'craft-rrule';
+    public const MODULE_ID = 'rrule-wrapper';
 
     public function bootstrap($app): void
     {
         $app->setModule(self::MODULE_ID, $this);
-
         $app->getModule(self::MODULE_ID);
     }
 
